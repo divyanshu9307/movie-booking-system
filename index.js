@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import logger from './logger/logger.js';
 
 const app = express();
 
@@ -9,8 +10,8 @@ dotenv.config();
 const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/movieBookingSystem';
 
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Database connected successfully!'))
-    .catch(err => console.error('Database connection error:', err));
+    .then(() => logger.info('Connected to database successfully'))
+    .catch(err => logger.error('Database connection error:', err));
 
 
 app.use(express.json());
@@ -21,5 +22,5 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    logger.info(`Server is running on port ${PORT}`);
 });
