@@ -1,0 +1,21 @@
+{
+  "name": "movie-booking-system",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Restful back-end API for a movie ticket booking system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/divyanshu9307/movie-booking-system.git"
+  },
+  "author": "Divyanshu",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.14.1"
+  }
+}
