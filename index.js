@@ -1,7 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import logger from './logger/logger.js';
+import logger from './utils/logger.js';
+import { apiExecutionTime } from './middlewares/api-execution-time.js';
 
 const app = express();
 
@@ -15,6 +16,7 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 
 app.use(express.json());
+app.use(apiExecutionTime);
 
 app.get('/', (req, res) => {
     res.send('Home route to movie booking system!');
