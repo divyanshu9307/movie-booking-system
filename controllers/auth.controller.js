@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { generateToken } from '../services/authentication.js';
+import { generateToken } from '../utils/authentication.js';
 import logger from '../utils/logger.js';
 import { createResponse } from '../utils/response.js';
 import { findUserByEmail, saveUser } from '../transaction/user.query.js';

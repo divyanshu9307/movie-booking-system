@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import logger from './utils/logger.js';
 import authRouter from './routes/auth.route.js';
+import screenRouter from './routes/screen.route.js';
 import { apiExecutionTime } from './middlewares/api-execution-time.js';
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(apiExecutionTime);
 
 app.use('/auth', authRouter);
+app.use('/screens', screenRouter);
 
 app.get('/', (req, res) => {
     res.send('Home route to movie booking system!');
