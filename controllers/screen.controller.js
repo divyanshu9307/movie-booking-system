@@ -1,4 +1,4 @@
-import { findAllScreens, findByIdAndDeleteScreen, findByIdAndUpdateScreen, findScreenById, saveScreen } from "../transaction/screen.query.js";
+import { findAllScreens, findByIdAndUpdateScreen, findScreenById, saveScreen } from "../transaction/screen.query.js";
 import logger from "../utils/logger.js";
 import { createResponse } from "../utils/response.js";
 
@@ -57,22 +57,5 @@ export const updateScreen = async (req, res) => {
     } catch (error) {
         logger.error(`Error updating screen ${error.message}`);
         res.status(400).json({ message: 'Error updating screen', error });
-    }
-};
-
-export const deleteScreen = async (req, res) => {
-    try {
-        logger.info(`Deleting screen with ID ${req.params.id}`);
-        const deletedScreen = await findByIdAndDeleteScreen(req.params.id);
-
-        if (!deletedScreen) {
-            logger.error(`Screen with ID ${req.params.id} not found`);
-            return res.status(404).json(createResponse('Screen not found', null, 404));
-        }
-
-        logger.info(`Screen deleted successfully ${req.params.id}`);
-        res.status(200).json(createResponse('Screen deleted successfully', null, 200));
-    } catch (error) {
-        res.status(500).json(createResponse('Error deleting screen', null, 500));
     }
 };

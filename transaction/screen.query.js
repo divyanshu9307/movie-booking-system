@@ -36,12 +36,3 @@ export const findByIdAndUpdateScreen = async (id, screenData) => {
         throw error;
     }
 }
-
-export const findByIdAndDeleteScreen = async (id) => {
-    try {
-        const deletedScreen = await Screen.findByIdAndDelete(id);
-        return deletedScreen;
-    } catch (error) {
-        throw error;
-    }
-}

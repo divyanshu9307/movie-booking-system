@@ -1,6 +1,6 @@
 
 import { Router } from 'express';
-import { createScreen, deleteScreen, getAllScreens, getScreenById, updateScreen } from '../controllers/screen.controller.js';
+import { createScreen, getAllScreens, getScreenById, updateScreen } from '../controllers/screen.controller.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
 
 const router = Router();
@@ -9,6 +9,5 @@ router.get('/', getAllScreens);
 router.get('/:id', getScreenById);
 router.post('/', authMiddleware(['admin', 'manager']), createScreen);
 router.put('/', authMiddleware(['admin', 'manager']), updateScreen);
-router.delete('/:id', authMiddleware(['admin', 'manager']), deleteScreen);
 
 export default router;
