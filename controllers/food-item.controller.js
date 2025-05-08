@@ -1,5 +1,6 @@
 import FoodItem from '../models/food-item.model.js';
 import { findAllFoodItems, findFoodItemById, saveFoodItem } from '../transaction/food-item.query.js';
+import { findScreenById } from '../transaction/screen.query.js';
 import logger from '../utils/logger.js';
 import { createResponse } from '../utils/response.js';
 

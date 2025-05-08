@@ -95,6 +95,20 @@ export const updateShow = async (req, res) => {
             }
         }
 
+        if (Array.isArray(req.body.seatGroups)) {
+            const updatedSeatGroups = [...existingShow.seatGroups];
+            req.body.seatGroups.forEach((group, index) => {
+                if (
+                    group &&
+                    typeof group.price === 'number' &&
+                    updatedSeatGroups[index]
+                ) {
+                    updatedSeatGroups[index].price = group.price;
+                }
+            });
+            updateData.seatGroups = updatedSeatGroups;
+        }
+
         const updatedShow = await findByIdAndUpdateShow(req.params.id, updateData);
 
         logger.info(`Show updated successfully ${req.params.id}`);
