@@ -5,6 +5,7 @@ import logger from './utils/logger.js';
 import authRouter from './routes/auth.route.js';
 import screenRouter from './routes/screen.route.js';
 import showRouter from './routes/show.route.js';
+import foodItemRouter from './routes/food-item.route.js';
 import { apiExecutionTime } from './middlewares/api-execution-time.js';
 
 const app = express();
@@ -24,6 +25,7 @@ app.use(apiExecutionTime);
 app.use('/auth', authRouter);
 app.use('/screens', screenRouter);
 app.use('/shows', showRouter);
+app.use('/food-items', foodItemRouter);
 
 app.get('/', (req, res) => {
     res.send('Home route to movie booking system!');
