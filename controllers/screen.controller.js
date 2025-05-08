@@ -35,7 +35,7 @@ export const getScreenById = async (req, res) => {
         const screen = await findScreenById(req.params.id);
         if (!screen) {
             logger.error(`Screen with ID ${req.params.id} not found`);
-            res.status(404).json(createResponse('Screen not found', null, 404));
+            return res.status(404).json(createResponse('Screen not found', null, 404));
         }
 
         logger.info(`Screen retrieved successfully ${req.params.id}`);
@@ -51,7 +51,7 @@ export const updateScreen = async (req, res) => {
         logger.info(`Updating screen with ID ${req.params.id}`);
         const updatedScreen = await findByIdAndUpdateScreen(req.params.id, req.body);
         if (!updatedScreen) {
-            res.status(404).json(createResponse('Screen not found', null, 404));
+            return res.status(404).json(createResponse('Screen not found', null, 404));
         }
         res.status(200).json(createResponse('Screen updated successfully', updatedScreen, 200));
     } catch (error) {
