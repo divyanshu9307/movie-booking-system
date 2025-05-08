@@ -3,8 +3,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const generateToken = (email, role) => {
+export const generateToken = (_id, email, role) => {
     const payload = {
+        _id,
         email,
         role
     };

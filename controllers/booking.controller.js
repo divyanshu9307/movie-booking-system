@@ -89,3 +89,36 @@ export const bookTicket = async (req, res) => {
         res.status(500).json(createResponse('Error booking ticket', error.message, 500));
     }
 };
+
+
+export const getMyBookings = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        logger.info(`Fetching bookings for user: ${userId}`);
+
+        const tickets = await findTicketsByUserId(userId);
+
+        res.status(200).json(createResponse('Bookings fetched successfully', tickets, 200));
+    } catch (error) {
+        logger.error(`Error fetching bookings: ${error.message}`);
+        res.status(500).json(createResponse('Error fetching bookings', null, 500));
+    }
+};
+
+export const getBookingDetails = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const ticketId = req.params.id;
+
+        const ticket = await findTicketByIdAndUserId(ticketId, userId);
+
+        if (!ticket) {
+            return res.status(404).json(createResponse('Booking not found', null, 404));
+        }
+
+        res.status(200).json(createResponse('Booking details fetched successfully', ticket, 200));
+    } catch (error) {
+        logger.error(`Error fetching booking details: ${error.message}`);
+        res.status(500).json(createResponse('Error fetching booking details', null, 500));
+    }
+};
