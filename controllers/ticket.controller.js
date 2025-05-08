@@ -62,7 +62,7 @@ export const bookTicket = async (req, res) => {
 
         if (voucherCode) {
             const voucherDoc = await findVoucherByCode(voucherCode);
-            if (voucherDoc) {
+            if (voucherDoc && voucherDoc.status === 'Active' && voucherDoc.validFrom <= new Date() && voucherDoc.validUntil >= new Date()) {
                 discountAmount = voucherDoc.discountAmount;
             }
         }
