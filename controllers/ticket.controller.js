@@ -1,0 +1,91 @@
+import { createResponse } from '../utils/response.js';
+import logger from '../utils/logger.js';
+import { findByScreenIdAndFoodItemIds } from '../transaction/food-item.query.js';
+import { findVoucherByCode } from '../transaction/voucher.query.js';
+import { saveTicket } from '../transaction/ticket.query.js';
+
+const calculateSeatPrice = (seats, seatGroups) => {
+    let totalSeatPrice = 0;
+    seats.forEach(seat => {
+        const seatGroup = seatGroups.find(group => group.seats.some(row => row.some(s => s.seatNumber === seat)));
+        if (seatGroup) {
+            totalSeatPrice += seatGroup.price;
+        }
+    });
+    return totalSeatPrice;
+};
+
+const calculateFoodPrice = (foodItems) => {
+    let totalFoodPrice = 0;
+    foodItems.forEach(item => {
+        totalFoodPrice += item.totalPrice * item.quantity;
+    });
+    return totalFoodPrice;
+};
+
+export const bookTicket = async (req, res) => {
+    try {
+        logger.info(`Booking ticket for user: ${req.user._id} for show: ${req.body.show}`);
+        const { user, show: showId, seats, foodItems, voucherCode } = req.body;
+
+        const show = await findShowById(showId);
+        if (!show) {
+            logger.error('Show not found', { showId });
+            return res.status(404).json(createResponse('Show not found', null, 404));
+        }
+
+        const availableSeats = show.seatGroups.flatMap(group => group.seats.flatMap(row => row)).map(seat => seat.seatNumber);
+        const invalidSeats = seats.filter(seat => !availableSeats.includes(seat));
+        if (invalidSeats.length > 0) {
+            logger.error('Invalid seats', { invalidSeats });
+            return res.status(400).json(createResponse(`Seats ${invalidSeats.join(', ')} are not available`, null, 400));
+        }
+
+        if (foodItems && foodItems.length > 0) {
+            const foodItemIds = foodItems.map(item => item.foodItem);
+            const validFoodItems = await findByScreenIdAndFoodItemIds(show.screen._id, foodItemIds);
+
+            const validIds = validFoodItems.map(f => f._id.toString());
+            const invalidItems = foodItemIds.filter(id => !validIds.includes(id));
+
+            if (invalidItems.length > 0) {
+                logger.error('Invalid food items for screen', { invalidItems });
+                return res.status(400).json(createResponse('One or more food items are invalid for this screen.', null, 400));
+            }
+        }
+
+        const seatPrice = calculateSeatPrice(seats, show.seatGroups);
+        const foodPrice = foodItems ? calculateFoodPrice(foodItems) : 0;
+
+        let discountAmount = 0;
+        let totalAmount = seatPrice + foodPrice;
+
+        if (voucherCode) {
+            const voucherDoc = await findVoucherByCode(voucherCode);
+            if (voucherDoc) {
+                discountAmount = voucherDoc.discountAmount;
+            }
+        }
+
+        const finalAmount = totalAmount - discountAmount;
+
+        await saveTicket({
+            user,
+            show: showId,
+            seats: seats.map(seat => ({ seatNumber: seat, price: seatPrice })),
+            foodItems,
+            voucher: voucherCode ? voucher._id : null,
+            totalAmount,
+            discountAmount,
+            finalAmount,
+            paymentStatus: 'Pending',
+            status: 'Payment_Pending'
+        });
+
+        logger.info(`Seats reserved for user: ${user} for show: ${showId} with seats: ${seats.join(', ')}`);
+        res.status(201).json(createResponse('Seats have been reserved, pay to book the tickets', ticket, 201));
+    } catch (error) {
+        logger.error('Error booking ticket', { error: error.message });
+        res.status(500).json(createResponse('Error booking ticket', error.message, 500));
+    }
+};

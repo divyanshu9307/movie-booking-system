@@ -36,3 +36,15 @@ export const findByIdAndUpdateFoodItem = async (id, foodItemData) => {
         throw error;
     }
 }
+
+export const findByScreenIdAndFoodItemIds = async (screenId, foodItemIds) => {
+    try {
+        const foodItems = await FoodItem.find({
+            screen: screenId,
+            _id: { $in: foodItemIds }
+        });
+        return foodItems;
+    } catch (error) {
+        throw error;
+    }
+}
