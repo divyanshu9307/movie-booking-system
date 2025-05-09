@@ -20,17 +20,19 @@ A simple movie booking REST API servier built with Node.js.
 ### Installation
 
 ```bash
-git clone https://github.com/yourusername/express-app.git
-cd express-app
+git clone https://github.com/divyanshu9307/movie-booking-system.git
+cd movie-booking-system
 npm install
 ```
 
 ### Setup
 Add a .env file at root of the project and add following fields.
+```
 PORT
 MONGO_URI
 JWT_SECRET
 JWT_EXPIRE
+```
 
 ### Running the App
 ```bash
