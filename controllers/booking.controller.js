@@ -16,11 +16,9 @@ const calculateSeatPrice = (seats, seatGroups) => {
 };
 
 const calculateFoodPrice = (foodItems) => {
-    let totalFoodPrice = 0;
-    foodItems.forEach(item => {
-        totalFoodPrice += item.totalPrice * item.quantity;
-    });
-    return totalFoodPrice;
+    return foodItems.reduce((acc, item) => {
+        return acc + (item.totalPrice || 0);
+    }, 0);
 };
 
 export const bookTicket = async (req, res) => {
@@ -52,6 +50,14 @@ export const bookTicket = async (req, res) => {
                 logger.error('Invalid food items for screen', { invalidItems });
                 return res.status(400).json(createResponse('One or more food items are invalid for this screen.', null, 400));
             }
+
+            foodItems.forEach(item => {
+                const foodItem = validFoodItems.find(f => f._id.toString() === item.foodItem);
+                if (foodItem) {
+                    item.price = foodItem.price;
+                    item.totalPrice = foodItem.price * item.quantity;
+                }
+            })
         }
 
         const seatPrice = calculateSeatPrice(seats, show.seatGroups);
@@ -62,8 +68,12 @@ export const bookTicket = async (req, res) => {
 
         if (voucherCode) {
             const voucherDoc = await findVoucherByCode(voucherCode);
-            if (voucherDoc && voucherDoc.status === 'Active' && voucherDoc.validFrom <= new Date() && voucherDoc.validUntil >= new Date()) {
-                discountAmount = voucherDoc.discountAmount;
+            if (voucherDoc && voucherDoc.status === 'Active' && voucherDoc.validFrom <= new Date() && voucherDoc.validUntil >= new Date() && voucherDoc.minAmount <= totalAmount) {
+                if (voucherDoc.discountType === 'Fixed' && voucherDoc.discountValue > 0 && voucherDoc.discountValue <= totalAmount) {
+                    discountAmount = Math.min(voucherDoc.discountValue, totalAmount);
+                } else if (voucherDoc.discountType === 'Percentage' && voucherDoc.discountValue > 0 && voucherDoc.discountValue <= 100) {
+                    discountAmount = (totalAmount * voucherDoc.discountValue) / 100;
+                }
             }
         }
 
