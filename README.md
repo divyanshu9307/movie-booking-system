@@ -60,6 +60,16 @@ express-app/
 
 - `npm start` - Run the app in production mode  
 
+## Production deployment
+```
+https://movie-booking-system-ohbj.onrender.com/
+```
+
+## Postman API collection
+```
+https://www.postman.com/flight-physicist-40840473/workspace/public-workspace/collection/23850021-8407e455-d566-480f-9f1a-d05e3a6dad89?action=share&creator=23850021
+```
+
 ## 🧪 Testing
 
 To be added (Jest / Mocha / Supertest integration can be included).
