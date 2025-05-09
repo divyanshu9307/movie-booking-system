@@ -3,6 +3,7 @@ import logger from '../utils/logger.js';
 import { findByScreenIdAndFoodItemIds } from '../transaction/food-item.query.js';
 import { findVoucherByCode } from '../transaction/voucher.query.js';
 import { saveTicket } from '../transaction/ticket.query.js';
+import { findShowById } from '../transaction/show.query.js';
 
 const calculateSeatPrice = (seats, seatGroups) => {
     let totalSeatPrice = 0;
@@ -79,7 +80,7 @@ export const bookTicket = async (req, res) => {
 
         const finalAmount = totalAmount - discountAmount;
 
-        await saveTicket({
+        const savedTicket = await saveTicket({
             user,
             show: showId,
             seats: seats.map(seat => ({ seatNumber: seat, price: seatPrice })),
@@ -93,7 +94,7 @@ export const bookTicket = async (req, res) => {
         });
 
         logger.info(`Seats reserved for user: ${user} for show: ${showId} with seats: ${seats.join(', ')}`);
-        res.status(201).json(createResponse('Seats have been reserved, pay to book the tickets', ticket, 201));
+        res.status(201).json(createResponse('Seats have been reserved, pay to book the tickets', savedTicket, 201));
     } catch (error) {
         logger.error('Error booking ticket', { error: error.message });
         res.status(500).json(createResponse('Error booking ticket', error.message, 500));

@@ -5,7 +5,7 @@ import { authMiddleware } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
-router.get('/bookings', authMiddleware['customer'], getMyBookings);
-router.get('/bookings/:id', authMiddleware['customer'], getBookingDetails);
+router.get('/getAllbookings', authMiddleware['customer'], getMyBookings);
+router.get('/getBookingBy/:id', authMiddleware['customer'], getBookingDetails);
 
 export default router;

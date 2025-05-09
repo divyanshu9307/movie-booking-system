@@ -4,9 +4,9 @@ import { authMiddleware } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
-router.get('/', getAllFoodItems);
-router.get('/:id', getFoodItemById);
-router.post('/', authMiddleware(['admin', 'manager']), createFoodItem);
-router.put('/:id', authMiddleware(['admin', 'manager']), updateFoodItem);
+router.get('/getAllFoodItems', getAllFoodItems);
+router.get('/getFoodItemBy/:id', getFoodItemById);
+router.post('/createFoodItem', authMiddleware(['admin', 'manager']), createFoodItem);
+router.put('/updateFoodItemBy/:id', authMiddleware(['admin', 'manager']), updateFoodItem);
 
 export default router;

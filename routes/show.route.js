@@ -5,10 +5,10 @@ import { bookTicket } from '../controllers/booking.controller.js';
 
 const router = Router();
 
-router.get('/', getAllShows);
-router.get('/:id', getShowById);
-router.post('/', authMiddleware(['admin', 'manager']), createShow);
-router.put('/', authMiddleware(['admin', 'manager']), updateShow);
+router.get('/getAllShows', getAllShows);
+router.get('/getShowBy/:id', getShowById);
+router.post('/createShow', authMiddleware(['admin', 'manager']), createShow);
+router.put('/updateShow/:id', authMiddleware(['admin', 'manager']), updateShow)
 
 router.post('/book', authMiddleware(['customer']), bookTicket);
 

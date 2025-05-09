@@ -4,9 +4,9 @@ import { authMiddleware } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
-router.get('/', getAllVouchers);
-router.get('/:code', getVoucherByCode);
-router.post('/', authMiddleware(['admin']), createVoucher);
-router.put('/:id', authMiddleware(['admin']), updateVoucher);
+router.get('/getAllVouchers', getAllVouchers);
+router.get('/getVoucherBy/:code', getVoucherByCode);
+router.post('/createVoucher', authMiddleware(['admin']), createVoucher);
+router.put('/updateVoucherBy/:id', authMiddleware(['admin']), updateVoucher);
 
 export default router;

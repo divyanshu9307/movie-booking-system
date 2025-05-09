@@ -1,6 +1,6 @@
 import { createResponse } from '../utils/response.js';
 import logger from '../utils/logger.js';
-import { findByIdAndUpdateVoucher, findVoucherByCode, saveVoucher } from '../transaction/voucher.query.js';
+import { findAllVouchers, findByIdAndUpdateVoucher, findVoucherByCode, saveVoucher } from '../transaction/voucher.query.js';
 
 export const createVoucher = async (req, res) => {
     try {
@@ -12,10 +12,10 @@ export const createVoucher = async (req, res) => {
             return res.status(400).json(createResponse('Voucher code already exists', null, 400));
         }
 
-        await saveVoucher(req.body);
+        const savedVoucher = await saveVoucher(req.body);
 
         logger.info(`Voucher created successfully with code: ${req.body.code}`);
-        res.status(201).json(createResponse('Voucher created', voucher, 201));
+        res.status(201).json(createResponse('Voucher created', savedVoucher, 201));
     } catch (error) {
         logger.error('Error creating voucher:', error);
         res.status(400).json(createResponse('Error creating voucher', error.message, 400));
