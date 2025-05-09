@@ -67,8 +67,10 @@ export const bookTicket = async (req, res) => {
         let discountAmount = 0;
         let totalAmount = seatPrice + foodPrice;
 
+        let voucherDoc = null;
+
         if (voucherCode) {
-            const voucherDoc = await findVoucherByCode(voucherCode);
+            voucherDoc = await findVoucherByCode(voucherCode);
             if (voucherDoc && voucherDoc.status === 'Active' && voucherDoc.validFrom <= new Date() && voucherDoc.validUntil >= new Date() && voucherDoc.minAmount <= totalAmount) {
                 if (voucherDoc.discountType === 'Fixed' && voucherDoc.discountValue > 0 && voucherDoc.discountValue <= totalAmount) {
                     discountAmount = Math.min(voucherDoc.discountValue, totalAmount);
@@ -85,7 +87,7 @@ export const bookTicket = async (req, res) => {
             show: showId,
             seats: seats.map(seat => ({ seatNumber: seat, price: seatPrice })),
             foodItems,
-            voucher: voucherCode ? voucher._id : null,
+            voucher: voucherCode ? voucherDoc._id : null,
             totalAmount,
             discountAmount,
             finalAmount,

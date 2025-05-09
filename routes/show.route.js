@@ -10,6 +10,6 @@ router.get('/getShowBy/:id', getShowById);
 router.post('/createShow', authMiddleware(['admin', 'manager']), createShow);
 router.put('/updateShow/:id', authMiddleware(['admin', 'manager']), updateShow)
 
-router.post('/book', authMiddleware(['customer']), bookTicket);
+router.post('/bookTicket', authMiddleware(['customer']), bookTicket);
 
 export default router;
