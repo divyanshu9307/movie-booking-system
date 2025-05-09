@@ -2,7 +2,7 @@ import { createResponse } from '../utils/response.js';
 import logger from '../utils/logger.js';
 import { findByScreenIdAndFoodItemIds } from '../transaction/food-item.query.js';
 import { findVoucherByCode } from '../transaction/voucher.query.js';
-import { saveTicket } from '../transaction/ticket.query.js';
+import { findTicketByIdAndUserId, findTicketsByUserId, saveTicket } from '../transaction/ticket.query.js';
 import { findShowById } from '../transaction/show.query.js';
 
 const calculateSeatPrice = (seats, seatGroups) => {
